@@ -1,15 +1,15 @@
 import waterz
 import daisy
 import numpy as np
+from scipy import ndimage
 
-test_roi = daisy.Roi((3000, 0, 6000), (500, 500, 500))
-test_file = 'test_er_mito.n5'
+test_roi = daisy.Roi((0, 0, 0), (501, 501, 501))
+test_file = 'test_mito.n5'
 fragments_ds = 'fragments'
 dist_max_ds = 'dist_max'
 thresholds = [0.01, 0.05, 0.1, 0.2, 0.3]
 
 if __name__ == '__main__':
-
     print("Reading fragments and distances...")
     fragments = daisy.open_ds(test_file, fragments_ds)[test_roi]
     dist_max = daisy.open_ds(test_file, dist_max_ds)[test_roi]
