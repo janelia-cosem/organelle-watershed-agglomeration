@@ -13,25 +13,30 @@ mito_ds = 'mito'
 if __name__ == '__main__':
 
     print("Opening datasets...")
-    #dist_er = daisy.open_ds(test_file, er_ds)
     dist_mitos = daisy.open_ds(test_file, mito_ds)
 
     print(f"Got distances in {dist_mitos.roi}")
-    #dist_er = dist_er[test_roi]
     dist_mitos = dist_mitos[test_roi]
 
     print("Reading into memory...")
-    #dist_er.materialize()
     dist_mitos.materialize()
-    
+
+    print("Calculating distances in voxels")
+    predicted_distance_in_voxels = np.arctanh( (dist_mitos.data - 127) / 128 ) * 50/4
+ 
     print("Binarize...")
     binarized = dist_mitos.data>=127
-    
+
+    print("Mask original data...")
+    predicted_distance_transform_masked = dist_mitos.data
+    predicted_distance_transform_masked[~binarized] = 0
+
+
+
     print("Calculate distance transform...")
     distance_transform = distance_transform_edt(binarized)
-    distance_transform *= 4 #nm
-    distance_transform = 128*np.tanh(distance_transform/50)+127
-    distance_transform = np.ma.array(distance_transform, mask=binarized)
+    actual_distance_transform_masked = 128*np.tanh(distance_transform*4/50) + 127
+    actual_distance_transform_masked[~binarized] = 0
     
     binarized_daisy = daisy.Array(
         data=binarized,
@@ -48,13 +53,25 @@ if __name__ == '__main__':
     print("Storing binarized...")
     binarized_ds[test_roi] = binarized
 
-    distance_transform_ds = daisy.prepare_ds(
+    predicted_distance_transform_masked_ds = daisy.prepare_ds(
         'test_mito.n5',
-        'distance_transform',
+        'predicted_distance_transform_masked',
         total_roi=binarized_daisy.roi,
         voxel_size=binarized_daisy.voxel_size,
         dtype=np.uint64)
 
-    print("Storing distance transform...")
-    distance_transform_ds[test_roi] = distance_transform
-    
+    print("Storing predicted distance masked...")
+    predicted_distance_transform_masked_ds[test_roi] = predicted_distance_transform_masked
+
+    actual_distance_transform_masked_ds = daisy.prepare_ds(
+        'test_mito.n5',
+        'actual_distance_transform_masked',
+        total_roi=binarized_daisy.roi,
+        voxel_size=binarized_daisy.voxel_size,
+        dtype=np.uint64)
+
+    print("Storing actual distance masked...")
+    actual_distance_transform_masked_ds[test_roi] = actual_distance_transform_masked
+
+
+

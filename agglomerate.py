@@ -5,8 +5,8 @@ from scipy import ndimage
 
 test_roi = daisy.Roi((0, 0, 0), (501, 501, 501))
 test_file = 'test_mito.n5'
-fragments_ds = 'fragments'
-dist_max_ds = 'dist_max'
+fragments_ds = 'actual_fragments'
+dist_max_ds = 'actual_dist_max'
 thresholds = [0.01, 0.05, 0.1, 0.2, 0.3]
 
 if __name__ == '__main__':
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         print("Storing segmentation...")
         segmentation_ds = daisy.prepare_ds(
             test_file,
-            'segmentation_%.3f'%t,
+            'actual_segmentation_%.3f'%t,
             total_roi=fragments.roi,
             voxel_size=fragments.voxel_size,
             dtype=np.uint64)

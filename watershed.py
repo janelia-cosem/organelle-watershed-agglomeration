@@ -6,9 +6,9 @@ import numpy as np
 
 test_roi = daisy.Roi((0, 0, 0), (501, 501, 501))
 
-test_file = '/groups/cosem/cosem/ackermand/HeLa_Cell3_4x4x4nm_it450000_crop.n5'
-mito_ds = 'mito'
-er_ds = 'er'
+test_file = '/groups/scicompsoft/home/ackermand/Programming/SegmentationFromJan/test_mito.n5'
+mito_ds = 'actual_distance_transform_masked'
+#er_ds = 'er'
 
 def find_seeds(dist, sigma=3.0):
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     fragments_ds = daisy.prepare_ds(
         'test_mito.n5',
-        'fragments',
+        'actual_fragments',
         total_roi=fragments.roi,
         voxel_size=fragments.voxel_size,
         dtype=np.uint64)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     dist_max_ds = daisy.prepare_ds(
         'test_mito.n5',
-        'dist_max',
+        'actual_dist_max',
         total_roi=fragments.roi,
         voxel_size=fragments.voxel_size,
         dtype=np.float32)
