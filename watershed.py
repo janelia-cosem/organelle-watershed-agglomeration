@@ -24,16 +24,7 @@ def normalize_distances(array):
     array.data = array.data.astype(np.float32)/255.0
     array.data -= 126/255.0
     array.data[array.data<0] = 0
-    #array.data[array.data<127] = 0
-   
-    #array.data[(array.data<=225) & (array.data>=127)] = 0.5
-    #array.data[array.data>225] = 1
-    #array.data -= 126
-    #array.data /= 255
-    #array.data[array.data<127] = 0
-    #array.data[array.data>=127] = 1
-    #array.data = distance_transform_edt(array.data)
-    #np.clip(array.data, 0, 0.5, out=array.data)
+    array.data /= 129/255.0
 
 def calculate_dist_in_voxels(array):
     array.data[array.data==255] = 254 #To prevent infinity

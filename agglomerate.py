@@ -17,7 +17,7 @@ fragments_ds = 'fragments'
 
 if __name__ == '__main__':
     #original method
-    thresholds = [0.5, 0.4, 0.3, 0.2, 0.1]
+    thresholds = [0.8, 0.6, 0.4, 0.2]
 
     dist_ds = 'dist_max' #'dist_max'
     print("Reading fragments and distances...")
@@ -36,7 +36,7 @@ if __name__ == '__main__':
         affs=affs,
         fragments=fragments.data,
         thresholds=inverted_thresholds,
-        scoring_function = 1 - waterz.QuantileAffinity(50)), 
+        scoring_function = 1 - waterz.QuantileAffinity(50, init_with_max=True)), 
         #score = penalty. fuse if penalty is low.  
         #scoring_function = 1.0 - waterz.QuantileAffinity(90)/np.tanh( waterz.ContactArea())),#1.0 - waterz.ContactArea() ), #np.tanh( waterz.ContactArea() ) ), #TANH IS JUST A PLACEHOLDER!!!!
         thresholds):
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         print(f"Storing segmentation for threshold {t}...")
         segmentation_ds = daisy.prepare_ds(
             test_file,
-            'updated_segmentation_%.3f'%t,
+            'rescaled_initwithmax_%.3f'%t,
             total_roi=fragments.roi,
             voxel_size=fragments.voxel_size,
             compressor={'id': 'gzip', 'level': 6},
