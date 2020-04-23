@@ -5,7 +5,7 @@ import daisy
 import numpy as np
 import copy
 
-start_xyz = [6500, 100, 3500]#[6900, 100, 6600] #
+start_xyz = [7500,100, 3500]#[6500, 100, 3500]#[6900, 100, 6600] #
 dims_xyz = [1500, 700, 1700]#[500,500,500]#
 
 test_roi = daisy.Roi((start_xyz[2]*4, start_xyz[1]*4, start_xyz[0]*4), (dims_xyz[2]*4, dims_xyz[1]*4, dims_xyz[0]*4) )# daisy.Roi((500*4, 100*4, 5500*4), (2500*4, 500*4, 2500*4) )#daisy.Roi((6600*4, 100*4, 6900*4), (500*4, 500*4, 500*4) ) #(3500, 100, 7000), (4000, 600, 7500))

@@ -14,9 +14,10 @@ def normalize_distances(predicted_distances):
     normalized_distances = predicted_distances.astype(np.float32)/255.0
     normalized_distances -= 126/255.0
     normalized_distances[normalized_distances<0] = 0
+    normalized_distances /= 129/255.0
     return normalized_distances
 
-def blockwise_segmentation_function(array_in, roi, thresholds):
+def blockwise_segmentation_function(array_in, roi, thresholds, quantile):
 	#Materialize region of interest
 	predicted_distances = array_in.to_ndarray(roi, fill_value=0)
 
@@ -24,7 +25,7 @@ def blockwise_segmentation_function(array_in, roi, thresholds):
 	normalized_distances = normalize_distances(predicted_distances)
 	predicted_distances = None
 
-	#Find seeds
+    #Find seeds
 	seeds = find_seeds(normalized_distances)
 
 	#Watershed fragments
@@ -39,8 +40,7 @@ def blockwise_segmentation_function(array_in, roi, thresholds):
 	    affs=affs,
 	    fragments=fragments,
 	    thresholds=[thresholds],
-	    scoring_function = 1 - waterz.QuantileAffinity(50)):
+	    scoring_function = 1 - waterz.QuantileAffinity(quantile, init_with_max=False)):
 		agglomeration = s
 
-	#fragments = np.ones((182,182,182),np.uint64)
 	return agglomeration
