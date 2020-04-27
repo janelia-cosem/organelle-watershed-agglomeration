@@ -6,12 +6,12 @@ from scipy.ndimage import gaussian_filter, label
 from skimage.feature import peak_local_max
 from skimage.morphology import watershed
 
-def find_seeds(dist, sigma=3.0):
-    smoothed = gaussian_filter(dist, sigma=sigma)
-    return label(peak_local_max(smoothed, indices=False))[0]
+def find_seeds(dist):
+    #smoothed = gaussian_filter(dist, sigma=sigma)
+    return label(peak_local_max(dist, indices=False))[0]
 
 def normalize_distances(predicted_distances):
-    normalized_distances = predicted_distances.astype(np.float32)/255.0
+    normalized_distances = gaussian_filter(predicted_distances.astype(np.float32), sigma=3.0)/255.0
     normalized_distances -= 126/255.0
     normalized_distances[normalized_distances<0] = 0
     normalized_distances /= 129/255.0
