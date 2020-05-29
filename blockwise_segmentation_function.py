@@ -44,3 +44,19 @@ def blockwise_segmentation_function(array_in, roi, thresholds, quantile):
 		agglomeration = s
 
 	return agglomeration
+
+def blockwise_save_watershed_fragments_function(array_in, roi):
+	#Materialize region of interest
+	predicted_distances = array_in.to_ndarray(roi, fill_value=0)
+
+	#Normalizing distances
+	normalized_distances = normalize_distances(predicted_distances)
+	predicted_distances = None
+
+	#Find seeds
+	seeds = find_seeds(normalized_distances)
+
+	#Watershed fragments
+	fragments = watershed(-normalized_distances, seeds, mask = (normalized_distances.astype(bool))).astype(np.uint64)
+
+	return fragments
