@@ -4,8 +4,8 @@ import argparse
 import os
 import multiprocessing
 
-input_file = '/nrs/cosem/cosem/training/v0003.2/setup01/HeLa_Cell3_4x4x4nm/HeLa_Cell3_4x4x4nm_it825000.n5'
-output_file = '/groups/cosem/cosem/ackermand/HeLa_Cell3_4x4x4nm_setup01_it825000_results.n5'
+input_file = '/nrs/cosem/cosem/training/v0003.2/setup25/HeLa_Cell2_4x4x4nm/HeLa_Cell2_4x4x4nm_it575000.n5'
+output_file = '/groups/cosem/cosem/ackermand/HeLa_Cell2_4x4x4nm_setup25_it575000_results.n5'
 dataset = 'mito'
 num_processors = int(multiprocessing.cpu_count()/2)
 
@@ -23,8 +23,15 @@ if __name__ == '__main__':
 	file1 = open(f"{output_file}/input.txt", "w") 
 	file1.write(input_file) 
 	file1.close() 
-	
-	for threshold in [0.95, 0.975, 0.99]: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+	thresholds = []
+	if quantile == 25:
+		thresholds = [0.975]
+	elif quantile == 50:
+		thresholds = [0.8, 0.85, 0.9, 0.95]
+	elif quantile == 75:
+		thresholds = [0.4, 0.5, 0.6]
+
+	for threshold in thresholds: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
 		array_in = daisy.open_ds(input_file, dataset)
 		
 		voxel_size = array_in.voxel_size

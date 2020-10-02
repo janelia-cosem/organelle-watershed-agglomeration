@@ -4,9 +4,9 @@ import argparse
 import os
 import multiprocessing
 
-input_file = '/nrs/cosem/cosem/training/v0003.2/setup01/HeLa_Cell3_4x4x4nm/HeLa_Cell3_4x4x4nm_it825000.n5'
-output_file = '/groups/cosem/cosem/ackermand/HeLa_Cell3_4x4x4nm_setup01_it825000_results.n5'
-dataset = 'mito'
+input_file = '/nrs/cosem/cosem/training/v0003.2/setup35/Jurkat_Cell1_4x4x4nm/Jurkat_Cell1_FS96-Area1_4x4x4nm_it600000.n5'
+output_file = '/groups/cosem/cosem/ackermand/Jurkat_Cell1_4x4x4nm_setup35_it600000_results.n5'
+dataset = 'nucleus'
 num_processors = int(multiprocessing.cpu_count()/2)
 
 if __name__ == '__main__':
@@ -20,11 +20,22 @@ if __name__ == '__main__':
 	except:
 		pass
 
-	file1 = open(f"{output_file}/input.txt", "w") 
+	file1 = open(f"{output_file}/{dataset}_input.txt", "w") 
 	file1.write(input_file) 
 	file1.close() 
-	
-	for threshold in [0.95, 0.975, 0.99]: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+	thresholds = []
+	#for quantile in [25, 50, 75]:
+
+	if quantile == 10:
+		thresholds = [0.3, 0.4, 0.5, 0.6]
+	elif quantile == 25:
+		thresholds = [0.1, 0.2, 0.3, 0.4]
+	elif quantile == 50:
+		thresholds = [0.5, 0.6, 0.7]
+	elif quantile == 75:
+		thresholds = [0.4, 0.5, 0.6]
+
+	for threshold in thresholds: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
 		array_in = daisy.open_ds(input_file, dataset)
 		
 		voxel_size = array_in.voxel_size
@@ -33,7 +44,7 @@ if __name__ == '__main__':
 		block_size_nm = [chunks[0]*voxel_size[0],  chunks[1]*voxel_size[1], chunks[2]*voxel_size[2]]
 
 		array_out = daisy.prepare_ds(output_file,
-									f'{quantile}_{threshold}_smoothed',
+									f'{dataset}_{quantile}_{threshold}_smoothed',
 									array_in.roi,
 									voxel_size = voxel_size,
 									write_size= block_size_nm,

@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	file1.write(input_file) 
 	file1.close() 
 	
-	for threshold in [0.95, 0.975, 0.99]: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+	for threshold in [.95, .975, .99, .995, .9995]: #[0.05, 0.1, 0.5, 0.75, 0.9, 0.95, 0.99]:
 		array_in = daisy.open_ds(input_file, dataset)
 		
 		voxel_size = array_in.voxel_size
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 		block_size_nm = [chunks[0]*voxel_size[0],  chunks[1]*voxel_size[1], chunks[2]*voxel_size[2]]
 
 		array_out = daisy.prepare_ds(output_file,
-									f'{quantile}_{threshold}_smoothed',
+									f'{quantile}_{threshold}_smoothed_contactArea',
 									array_in.roi,
 									voxel_size = voxel_size,
 									write_size= block_size_nm,
@@ -44,4 +44,4 @@ if __name__ == '__main__':
 							   block_size = block_size_nm,
 							   context = context_nm,
 							   num_workers = num_processors,
-							   segment_function = lambda array_in,roi: blockwise_segmentation_function(array_in, roi, threshold, quantile))
+							   segment_function = lambda array_in,roi: blockwise_segmentation_function_using_contact_area(array_in, roi, threshold, quantile))

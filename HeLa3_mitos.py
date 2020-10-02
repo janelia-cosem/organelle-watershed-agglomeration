@@ -23,8 +23,15 @@ if __name__ == '__main__':
 	file1 = open(f"{output_file}/input.txt", "w") 
 	file1.write(input_file) 
 	file1.close() 
-	
-	for threshold in [0.95, 0.975, 0.99]: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+	thresholds = []
+	if quantile == 25:
+		thresholds = [0.95, 0.975]
+	elif quantile == 50:
+		thresholds = [0.8, 0.85, 0.9, 0.95]
+	elif quantile == 75:
+		thresholds = [0.4, 0.5, 0.6]
+
+	for threshold in thresholds: #[0.8, 0.85, 0.9, 0.95, 0.975, 0.99]:#[0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
 		array_in = daisy.open_ds(input_file, dataset)
 		
 		voxel_size = array_in.voxel_size

@@ -1,0 +1,28 @@
+import bdv.util.*;
+
+import ij.*;
+
+import java.util.concurrent.*;
+
+import org.janelia.saalfeldlab.n5.*;
+import org.janeliai.saalfeldlab.n5.imglib2.*;
+import org.janelia.saalfeldlab.n5.imglib2.*;
+import org.janelia.saalfeldlab.n5.hdf5.*;
+import org.janelia.saalfeldlab.n5.googlecloud.*;
+
+import net.imglib2.img.display.imagej.*;
+import net.imglib2.img.imageplus.*;
+import net.imglib2.realtransform.*;
+import net.imglib2.util.*;
+import net.imglib2.view.*;
+
+n5 = new N5FSReader("/groups/scicompsoft/home/ackermand/Programming/SegmentationFromJan/test_mito.n5");
+prediction = N5Utils.open(n5, "predicted_distance_transform_masked/");
+ImagePlus imp_current_cropped = ImageJFunctions.wrap(Views.offsetInterval(prediction, new long[]{0, 0, 0}, new long[]{501, 501, 501}),"predicted");
+imp_current_cropped.setDimensions(1, 501, 1);
+imp_current_cropped.show("");
+
+prediction = N5Utils.open(n5, "actual_distance_transform_masked");
+ImagePlus imp_current_cropped = ImageJFunctions.wrap(Views.offsetInterval(prediction, new long[]{0, 0, 0}, new long[]{501, 501, 501}),"actual");
+imp_current_cropped.setDimensions(1, 501, 1);
+imp_current_cropped.show("");
