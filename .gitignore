@@ -3,3 +3,4 @@
 *.tif
 backup_venv/
 venv
+__pycache__/
